@@ -47,6 +47,7 @@ get '/memos/:id' do
     []
   end
   @memo = current_datas.filter { |data| data['id'].eql?(id) }[0]
+  return not_found if @memo.nil? == true
   erb :show_view
 end
 
@@ -63,7 +64,6 @@ delete '/memos/:id' do
 end
 
 get '/memos/:id/edit' do
-  p params
   id = params['id'].to_i
   current_datas = begin
     File.open('data.json') { |file| JSON.parse(file.read) }
@@ -71,11 +71,11 @@ get '/memos/:id/edit' do
     []
   end
   @memo = current_datas.filter { |data| data['id'].eql?(id) }[0]
+  return not_found if @memo.nil? == true
   erb :edit_view
 end
 
 patch '/memos/:id/edit' do
-  p params
   id = params['id'].to_i
   current_datas = begin
     File.open('data.json') { |file| JSON.parse(file.read) }
@@ -91,4 +91,8 @@ patch '/memos/:id/edit' do
     JSON.dump(current_datas, file)
   end
   redirect '/memos'
+end
+
+not_found do
+  '404'
 end
