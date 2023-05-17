@@ -2,7 +2,6 @@
 
 require 'sinatra'
 require 'sinatra/reloader'
-require 'debug'
 
 helpers do
   def h(text)
@@ -11,7 +10,11 @@ helpers do
 end
 
 get '/memos' do
-  @memos = File.open('data.json') { |file| JSON.parse(file.read) }
+  @memos = begin
+    File.open('data.json') { |file| JSON.parse(file.read) }
+  rescue JSON::ParserError
+    []
+  end
   erb :top_view
 end
 
@@ -20,7 +23,11 @@ get '/memos/new' do
 end
 
 post '/memos/new' do
-  current_datas = File.open('data.json') { |file| JSON.parse(file.read) }
+  current_datas = begin
+    File.open('data.json') { |file| JSON.parse(file.read) }
+  rescue JSON::ParserError
+    []
+  end
   File.open('data.json', 'w') do |file|
     req_body = {}
     req_body['title'] = h(params[:title])
@@ -34,14 +41,22 @@ end
 
 get '/memos/:id' do
   id = params['id'].to_i
-  current_datas = File.open('data.json') { |file| JSON.parse(file.read) }
+  current_datas = begin
+    File.open('data.json') { |file| JSON.parse(file.read) }
+  rescue JSON::ParserError
+    []
+  end
   @memo = current_datas.filter { |data| data['id'].eql?(id) }[0]
   erb :show_view
 end
 
 delete '/memos/:id' do
   id = params['id'].to_i
-  current_datas = File.open('data.json') { |file| JSON.parse(file.read) }
+  current_datas = begin
+    File.open('data.json') { |file| JSON.parse(file.read) }
+  rescue JSON::ParserError
+    []
+  end
   current_datas.delete_if { |data| data['id'].eql?(id) }
   File.open('data.json', 'w') { |file| JSON.dump(current_datas, file) }
   redirect '/memos'
@@ -50,7 +65,11 @@ end
 get '/memos/:id/edit' do
   p params
   id = params['id'].to_i
-  current_datas = File.open('data.json') { |file| JSON.parse(file.read) }
+  current_datas = begin
+    File.open('data.json') { |file| JSON.parse(file.read) }
+  rescue JSON::ParserError
+    []
+  end
   @memo = current_datas.filter { |data| data['id'].eql?(id) }[0]
   erb :edit_view
 end
@@ -58,7 +77,11 @@ end
 patch '/memos/:id/edit' do
   p params
   id = params['id'].to_i
-  current_datas = File.open('data.json') { |file| JSON.parse(file.read) }
+  current_datas = begin
+    File.open('data.json') { |file| JSON.parse(file.read) }
+  rescue JSON::ParserError
+    []
+  end
   File.open('data.json', 'w') do |file|
     req_body = {}
     req_body['title'] = h(params[:title])
