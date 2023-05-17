@@ -22,7 +22,7 @@ get '/memos/new' do
   erb :new_view
 end
 
-post '/memos/new' do
+post '/memos' do
   current_datas = begin
     File.open('data.json') { |file| JSON.parse(file.read) }
   rescue JSON::ParserError
@@ -77,7 +77,7 @@ get '/memos/:id/edit' do
   erb :edit_view
 end
 
-patch '/memos/:id/edit' do
+patch '/memos/:id' do
   id = params['id'].to_i
   current_datas = begin
     File.open('data.json') { |file| JSON.parse(file.read) }
