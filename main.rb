@@ -48,6 +48,7 @@ get '/memos/:id' do
   end
   @memo = current_datas.filter { |data| data['id'].eql?(id) }[0]
   return not_found if @memo.nil? == true
+
   erb :show_view
 end
 
@@ -72,6 +73,7 @@ get '/memos/:id/edit' do
   end
   @memo = current_datas.filter { |data| data['id'].eql?(id) }[0]
   return not_found if @memo.nil? == true
+
   erb :edit_view
 end
 
