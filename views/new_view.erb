@@ -2,22 +2,15 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="/css/new.css" />
   <title>sinatra</title>
 </head>
 <body>
 <h1>メモアプリ</h1>
-  <form action="new" method="POST" class="form-example">
-    <div>
-      <label for="title">Title</label>
-      <input type="text" name="title" required>
-    </div>
-    <div class="form-example">
-      <label for="text">Text</label>
-      <textarea type="text" name="text" required></textarea>
-    </div>
-    <div>
-      <input type="submit" value="保存">
-    </div>
+  <form action="new" method="POST" class="form">
+    <input type="text" name="title" required class="title">
+    <textarea type="text" name="text" class= "text"required></textarea>
+    <input type="submit" value="保存" class="submit">
   </form>
 </body>
 </html>

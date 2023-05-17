@@ -2,21 +2,22 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="/css/show.css" />
   <title>sinatra</title>
 </head>
 <body>
-  <h1>メモアプリ</h1>
+  <h1 class="headline">メモアプリ</h1>
   <div>
-    <h2><%= @memo["title"] %></h2>
-    <h3><%= @memo["text"] %></h3>
+    <h2 class="title"><%= @memo["title"] %></h2>
+    <h3 class="text"><%= @memo["text"] %></h3>
   </div>
-  <div>
-    <form action="/memos/<%= @memo["id"] %>/edit" method="GET">
-      <button>変更</button>
+  <div class="buttons">
+    <form action="/memos/<%= @memo["id"] %>/edit" method="GET" class="form">
+      <input type="submit" value="変更" class="submit">
     </form>
-    <form action="/memos/<%= @memo["id"] %>" method="POST">
+    <form action="/memos/<%= @memo["id"] %>" method="POST" class="form">
       <input type="hidden" name="_method" value="DELETE">
-      <input type="submit" value="削除">
+      <input type="submit" value="削除" class="submit">
     </form>
   </div>
 </body>
