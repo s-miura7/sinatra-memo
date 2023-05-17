@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>sinatra</title>
+</head>
+<body>
+  <h1>メモアプリ</h1>
+  <div>
+    <h2><%= @memo["title"] %></h2>
+    <h3><%= @memo["text"] %></h3>
+  </div>
+  <div>
+    <form action="/memos/<%= @memo["id"] %>/edit" method="GET">
+      <button>変更</button>
+    </form>
+    <form action="/memos/<%= @memo["id"] %>" method="POST">
+      <input type="hidden" name="_method" value="DELETE">
+      <input type="submit" value="削除">
+    </form>
+  </div>
+</body>
+</html>
