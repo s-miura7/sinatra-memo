@@ -2,19 +2,12 @@
 
 require 'sinatra'
 require 'sinatra/reloader'
+require './helpers/helpers'
 
-helpers do
-  def h(text)
-    Rack::Utils.escape_html(text)
-  end
-end
+helpers Memohelper
 
 get '/memos' do
-  @memos = begin
-    File.open('data.json') { |file| JSON.parse(file.read) }
-  rescue JSON::ParserError
-    []
-  end
+  @memos = parse_datas
   erb :top_view
 end
 
@@ -23,11 +16,7 @@ get '/memos/new' do
 end
 
 post '/memos' do
-  current_datas = begin
-    File.open('data.json') { |file| JSON.parse(file.read) }
-  rescue JSON::ParserError
-    []
-  end
+  current_datas = parse_datas
   File.open('data.json', 'w') do |file|
     req_body = {}
     req_body['title'] = h(params[:title])
@@ -41,11 +30,7 @@ end
 
 get '/memos/:id' do
   id = params['id'].to_i
-  current_datas = begin
-    File.open('data.json') { |file| JSON.parse(file.read) }
-  rescue JSON::ParserError
-    []
-  end
+  current_datas = parse_datas
   @memo = current_datas.filter { |data| data['id'].eql?(id) }[0]
   return not_found if @memo.nil? == true
 
@@ -54,11 +39,7 @@ end
 
 delete '/memos/:id' do
   id = params['id'].to_i
-  current_datas = begin
-    File.open('data.json') { |file| JSON.parse(file.read) }
-  rescue JSON::ParserError
-    []
-  end
+  current_datas = parse_datas
   current_datas.delete_if { |data| data['id'].eql?(id) }
   File.open('data.json', 'w') { |file| JSON.dump(current_datas, file) }
   redirect '/memos'
@@ -66,11 +47,7 @@ end
 
 get '/memos/:id/edit' do
   id = params['id'].to_i
-  current_datas = begin
-    File.open('data.json') { |file| JSON.parse(file.read) }
-  rescue JSON::ParserError
-    []
-  end
+  current_datas = parse_datas
   @memo = current_datas.filter { |data| data['id'].eql?(id) }[0]
   return not_found if @memo.nil? == true
 
@@ -79,11 +56,7 @@ end
 
 patch '/memos/:id' do
   id = params['id'].to_i
-  current_datas = begin
-    File.open('data.json') { |file| JSON.parse(file.read) }
-  rescue JSON::ParserError
-    []
-  end
+  current_datas = parse_datas
   File.open('data.json', 'w') do |file|
     req_body = {}
     req_body['title'] = h(params[:title])
