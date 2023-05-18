@@ -3,11 +3,15 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require './helpers/memo_helpers'
+require 'pg'
 
 helpers MemoHelpers
 
+conn = PG.connect(dbname: 'memo')
+# conn.exec("CREATE TABLE memos(id SERIAL, title TEXT NOT NULL, text TEXT NOT NULL)")
+
 get '/memos' do
-  @memos = parse_data
+  @memos = conn.exec('SELECT * FROM memos')
   erb :top_view
 end
 
@@ -16,55 +20,37 @@ get '/memos/new' do
 end
 
 post '/memos' do
-  current_data = parse_data
-  req_body = {}
-  req_body['title'] = params[:title]
-  req_body['text'] = params[:text]
-  req_body['id'] = current_data.empty? ? 1 : current_data[-1]['id'] + 1
-  current_data.push(req_body)
-  File.open('data.json', 'w') do |file|
-    JSON.dump(current_data, file)
-  end
+  conn.exec('INSERT INTO memos(title, text) VALUES ($1, $2)', [params[:title], params[:text]])
   redirect '/memos'
 end
 
 get '/memos/:id' do
-  id = params['id'].to_i
-  current_data = parse_data
-  @memo = current_data.find { |data| data['id'].eql?(id) }
+  id = params['id']
+  conn.exec('SELECT * FROM memos WHERE id = $1', [id]).each { |result| @memo = result }
   return not_found if @memo.nil?
 
   erb :show_view
 end
 
 delete '/memos/:id' do
-  id = params['id'].to_i
-  current_data = parse_data
-  current_data.delete_if { |data| data['id'].eql?(id) }
-  File.open('data.json', 'w') { |file| JSON.dump(current_data, file) }
+  id = params['id']
+  conn.exec('DELETE FROM memos WHERE id = $1', [id])
   redirect '/memos'
 end
 
 get '/memos/:id/edit' do
-  id = params['id'].to_i
-  current_data = parse_data
-  @memo = current_data.find { |data| data['id'].eql?(id) }
+  id = params['id']
+  conn.exec('SELECT * FROM memos WHERE id = $1', [id]).each { |result| @memo = result }
   return not_found if @memo.nil?
 
   erb :edit_view
 end
 
 patch '/memos/:id' do
-  id = params['id'].to_i
-  current_data = parse_data
-  req_body = {}
-  req_body['title'] = params[:title]
-  req_body['text'] = params[:text]
-  req_body['id'] = id
-  current_data.map! { |data| data['id'] == id ? req_body : data }
-  File.open('data.json', 'w') do |file|
-    JSON.dump(current_data, file)
-  end
+  id = params['id']
+  # 一文が長いから2行に分けた
+  res = conn.exec('UPDATE  memos SET (title, text) = ($1, $2) WHERE id = $3', [params[:title], params[:text], id])
+  res.each { |result| @memo = result }
   redirect '/memos'
 end
 
