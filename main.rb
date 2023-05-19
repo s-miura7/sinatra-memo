@@ -26,7 +26,7 @@ end
 
 get '/memos/:id' do
   id = params['id']
-  conn.exec('SELECT * FROM memos WHERE id = $1', [id]).each { |result| @memo = result }
+  @memo = conn.exec('SELECT * FROM memos WHERE id = $1', [id]).first
   return not_found if @memo.nil?
 
   erb :show_view
@@ -40,7 +40,7 @@ end
 
 get '/memos/:id/edit' do
   id = params['id']
-  conn.exec('SELECT * FROM memos WHERE id = $1', [id]).each { |result| @memo = result }
+  @memo = conn.exec('SELECT * FROM memos WHERE id = $1', [id]).first
   return not_found if @memo.nil?
 
   erb :edit_view
@@ -50,7 +50,7 @@ patch '/memos/:id' do
   id = params['id']
   # 一文が長いから2行に分けた
   res = conn.exec('UPDATE  memos SET (title, text) = ($1, $2) WHERE id = $3', [params[:title], params[:text], id])
-  res.each { |result| @memo = result }
+  @memo = res.first
   redirect '/memos'
 end
 
