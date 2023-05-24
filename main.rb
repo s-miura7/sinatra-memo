@@ -2,12 +2,12 @@
 
 require 'sinatra'
 require 'sinatra/reloader'
-require './helpers/helpers'
+require './helpers/Memohelpers'
 
 helpers Memohelper
 
 get '/memos' do
-  @memos = parse_datas
+  @memos = parse_data
   erb :top_view
 end
 
@@ -17,12 +17,12 @@ end
 
 post '/memos' do
   current_datas = parse_data
+  req_body = {}
+  req_body['title'] = h(params[:title])
+  req_body['text'] = h(params[:text])
+  req_body['id'] = current_datas.empty? ? 1 : current_datas[-1]['id'] + 1
+  current_datas.push(req_body)
   File.open('data.json', 'w') do |file|
-    req_body = {}
-    req_body['title'] = h(params[:title])
-    req_body['text'] = h(params[:text])
-    req_body['id'] = current_datas.empty? ? 1 : current_datas[-1]['id'] + 1
-    current_datas.push(req_body)
     JSON.dump(current_datas, file)
   end
   redirect '/memos'
@@ -31,7 +31,7 @@ end
 get '/memos/:id' do
   id = params['id'].to_i
   current_datas = parse_data
-  @memo = current_datas.filter { |data| data['id'].eql?(id) }[0]
+  @memo = current_datas.find { |data| data['id'].eql?(id) }
   return not_found if @memo.nil? == true
 
   erb :show_view
@@ -48,7 +48,7 @@ end
 get '/memos/:id/edit' do
   id = params['id'].to_i
   current_datas = parse_data
-  @memo = current_datas.filter { |data| data['id'].eql?(id) }[0]
+  @memo = current_datas.find { |data| data['id'].eql?(id) }
   return not_found if @memo.nil? == true
 
   erb :edit_view
@@ -57,12 +57,12 @@ end
 patch '/memos/:id' do
   id = params['id'].to_i
   current_datas = parse_data
+  req_body = {}
+  req_body['title'] = h(params[:title])
+  req_body['text'] = h(params[:text])
+  req_body['id'] = id
+  current_datas.map! { |data| data['id'] == id ? req_body : data }
   File.open('data.json', 'w') do |file|
-    req_body = {}
-    req_body['title'] = h(params[:title])
-    req_body['text'] = h(params[:text])
-    req_body['id'] = id
-    current_datas.map! { |data| data['id'] == id ? req_body : data }
     JSON.dump(current_datas, file)
   end
   redirect '/memos'
