@@ -6,7 +6,7 @@ module Memohelper
     Rack::Utils.escape_html(text)
   end
 
-  def parse_datas
+  def parse_data
     File.open('./data.json') { |file| JSON.parse(file.read) }
   rescue JSON::ParserError
     []
