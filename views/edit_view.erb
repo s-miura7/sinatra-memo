@@ -1,18 +1,9 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="/css/edit.css">
-  <title>sinatra</title>
-</head>
-<body>
 <h1>メモアプリ</h1>
-  <form action="/memos/<%= @memo["id"] %>" method="POST" class="form">
-    <input type="text" name="title" value="<%= @memo["title"] %>" required class="title">
-    <textarea type="text" name="text" required class="text"><%= @memo["text"] %></textarea>
-    <input type="hidden" name="_method" value="PATCH">
-    <input type="submit" value="変更" class="submit">
-    </div>
-  </form>
-</body>
-</html>
+<form action="/memos/<%= @memo["id"] %>" method="POST" class="form">
+  <input type="text" name="title" value="<%= @memo["title"] %>" required class="title">
+  <textarea type="text" name="text" required class="text"><%= @memo["text"] %></textarea>
+  <input type="hidden" name="_method" value="PATCH">
+  <input type="submit" value="変更" class="submit">
+  </div>
+</form>
+

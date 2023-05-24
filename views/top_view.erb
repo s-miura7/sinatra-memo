@@ -1,21 +1,12 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="/css/top.css">
-  <title>sinatra</title>
-</head>
-<body>
-  <div class="header">
-    <h1 class="headline">メモアプリ</h1>
-    <a href="/memos/new" class="button-wrapper">
-        <button class="add-button">追加</button>
-    </a>
-  </div>
-  <ul>
-    <% @memos.each do |memo| %>
-      <li class="title"><a href="/memos/<%= memo["id"] %>"><%= memo["title"] %></a></li>
-    <% end %>
-  </ul>
-</body>
-</html>
+<div class="header">
+  <h1 class="headline">メモアプリ</h1>
+  <a href="/memos/new" class="button-wrapper">
+      <button class="add-button">追加</button>
+  </a>
+</div>
+<ul>
+  <% @memos.each do |memo| %>
+    <li class="title"><a href="/memos/<%= memo["id"] %>"><%= memo["title"] %></a></li>
+   <% end %>
+</ul>
+
