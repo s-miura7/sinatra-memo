@@ -2,18 +2,18 @@
 
 require 'sinatra'
 require 'sinatra/reloader'
-require './helpers/Memohelpers'
+require './helpers/memo_helpers'
 
 helpers Memohelper
 
 get '/memos' do
-  @location = "top"
+  @location = 'top'
   @memos = parse_data
   erb :top_view
 end
 
 get '/memos/new' do
-  @location = "new"
+  @location = 'new'
   erb :new_view
 end
 
@@ -31,7 +31,7 @@ post '/memos' do
 end
 
 get '/memos/:id' do
-  @location = "show"
+  @location = 'show'
   id = params['id'].to_i
   current_datas = parse_data
   @memo = current_datas.find { |data| data['id'].eql?(id) }
@@ -49,7 +49,7 @@ delete '/memos/:id' do
 end
 
 get '/memos/:id/edit' do
-  @location = "edit"
+  @location = 'edit'
   id = params['id'].to_i
   current_datas = parse_data
   @memo = current_datas.find { |data| data['id'].eql?(id) }
