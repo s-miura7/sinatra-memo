@@ -1,7 +1,7 @@
 <h1>メモアプリ</h1>
 <form action="/memos/<%= @memo["id"] %>" method="POST" class="form">
-  <input type="text" name="title" value="<%= @memo["title"] %>" required class="title">
-  <textarea type="text" name="text" required class="text"><%= @memo["text"] %></textarea>
+  <input type="text" name="title" value="<%= h @memo["title"] %>" required class="title">
+  <textarea type="text" name="text" required class="text"><%= h @memo["text"] %></textarea>
   <input type="hidden" name="_method" value="PATCH">
   <input type="submit" value="変更" class="submit">
   </div>
