@@ -4,7 +4,7 @@ require 'sinatra'
 require 'sinatra/reloader'
 require './helpers/memo_helpers'
 
-helpers Memohelper
+helpers Memo_helpers
 
 get '/memos' do
   @location = 'top'
@@ -18,14 +18,14 @@ get '/memos/new' do
 end
 
 post '/memos' do
-  current_datas = parse_data
+  current_data = parse_data
   req_body = {}
   req_body['title'] = params[:title]
   req_body['text'] = params[:text]
-  req_body['id'] = current_datas.empty? ? 1 : current_datas[-1]['id'] + 1
-  current_datas.push(req_body)
+  req_body['id'] = current_data.empty? ? 1 : current_data[-1]['id'] + 1
+  current_data.push(req_body)
   File.open('data.json', 'w') do |file|
-    JSON.dump(current_datas, file)
+    JSON.dump(current_data, file)
   end
   redirect '/memos'
 end
@@ -33,8 +33,8 @@ end
 get '/memos/:id' do
   @location = 'show'
   id = params['id'].to_i
-  current_datas = parse_data
-  @memo = current_datas.find { |data| data['id'].eql?(id) }
+  current_data = parse_data
+  @memo = current_data.find { |data| data['id'].eql?(id) }
   return not_found if @memo.nil?
 
   erb :show_view
@@ -42,17 +42,17 @@ end
 
 delete '/memos/:id' do
   id = params['id'].to_i
-  current_datas = parse_data
-  current_datas.delete_if { |data| data['id'].eql?(id) }
-  File.open('data.json', 'w') { |file| JSON.dump(current_datas, file) }
+  current_data = parse_data
+  current_data.delete_if { |data| data['id'].eql?(id) }
+  File.open('data.json', 'w') { |file| JSON.dump(current_data, file) }
   redirect '/memos'
 end
 
 get '/memos/:id/edit' do
   @location = 'edit'
   id = params['id'].to_i
-  current_datas = parse_data
-  @memo = current_datas.find { |data| data['id'].eql?(id) }
+  current_data = parse_data
+  @memo = current_data.find { |data| data['id'].eql?(id) }
   return not_found if @memo.nil?
 
   erb :edit_view
@@ -60,14 +60,14 @@ end
 
 patch '/memos/:id' do
   id = params['id'].to_i
-  current_datas = parse_data
+  current_data = parse_data
   req_body = {}
   req_body['title'] = params[:title]
   req_body['text'] = params[:text]
   req_body['id'] = id
-  current_datas.map! { |data| data['id'] == id ? req_body : data }
+  current_data.map! { |data| data['id'] == id ? req_body : data }
   File.open('data.json', 'w') do |file|
-    JSON.dump(current_datas, file)
+    JSON.dump(current_data, file)
   end
   redirect '/memos'
 end
