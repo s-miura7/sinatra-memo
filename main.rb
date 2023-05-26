@@ -4,7 +4,7 @@ require 'sinatra'
 require 'sinatra/reloader'
 require './helpers/memo_helpers'
 
-helpers Memo_helpers
+helpers MemoHelpers
 
 get '/memos' do
   @memos = parse_data

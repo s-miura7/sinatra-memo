@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # 共通で使うメソッド
-module Memo_helpers
+module MemoHelpers
   def h(text)
     Rack::Utils.escape_html(text)
   end
