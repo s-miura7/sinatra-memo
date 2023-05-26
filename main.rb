@@ -7,13 +7,11 @@ require './helpers/memo_helpers'
 helpers Memo_helpers
 
 get '/memos' do
-  @location = 'top'
   @memos = parse_data
   erb :top_view
 end
 
 get '/memos/new' do
-  @location = 'new'
   erb :new_view
 end
 
@@ -31,7 +29,6 @@ post '/memos' do
 end
 
 get '/memos/:id' do
-  @location = 'show'
   id = params['id'].to_i
   current_data = parse_data
   @memo = current_data.find { |data| data['id'].eql?(id) }
@@ -49,7 +46,6 @@ delete '/memos/:id' do
 end
 
 get '/memos/:id/edit' do
-  @location = 'edit'
   id = params['id'].to_i
   current_data = parse_data
   @memo = current_data.find { |data| data['id'].eql?(id) }
