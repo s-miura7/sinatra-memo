@@ -8,6 +8,13 @@ require 'pg'
 helpers MemoHelpers
 
 conn = PG.connect(dbname: 'memo')
+
+begin
+  conn.exec('CREATE TABLE memos(id SERIAL, title TEXT NOT NULL, text TEXT NOT NULL)')
+rescue PG::DuplicateTable
+  p 'table is already exist'
+end
+
 # conn.exec("CREATE TABLE memos(id SERIAL, title TEXT NOT NULL, text TEXT NOT NULL)")
 
 get '/memos' do
