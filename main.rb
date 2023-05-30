@@ -7,15 +7,15 @@ require 'pg'
 
 helpers MemoHelpers
 
-conn = PG.connect(dbname: 'memo')
+my_db_name = 'memo'
+
+conn = PG.connect(dbname: my_db_name)
 
 begin
   conn.exec('CREATE TABLE memos(id SERIAL, title TEXT NOT NULL, text TEXT NOT NULL)')
 rescue PG::DuplicateTable
   p 'table is already exist'
 end
-
-# conn.exec("CREATE TABLE memos(id SERIAL, title TEXT NOT NULL, text TEXT NOT NULL)")
 
 get '/memos' do
   @memos = conn.exec('SELECT * FROM memos')
