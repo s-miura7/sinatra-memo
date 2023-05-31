@@ -14,7 +14,7 @@ CONN = PG.connect(dbname: MY_DB_NAME)
 CONN.exec('CREATE TABLE IF NOT EXISTS memos(id SERIAL, title TEXT NOT NULL, text TEXT NOT NULL)')
 
 get '/memos' do
-  @memos = CONN.exec('SELECT * FROM memos')
+  @memos = CONN.exec('SELECT * FROM memos ORDER BY id ASC')
   erb :top_view
 end
 
