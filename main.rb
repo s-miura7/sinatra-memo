@@ -28,31 +28,27 @@ post '/memos' do
 end
 
 get '/memos/:id' do
-  id = params['id']
-  @memo = CONN.exec('SELECT * FROM memos WHERE id = $1', [id]).first
+  @memo = CONN.exec('SELECT * FROM memos WHERE id = $1',[ params['id']]).first
   return not_found if @memo.nil?
 
   erb :show_view
 end
 
 delete '/memos/:id' do
-  id = params['id']
-  CONN.exec('DELETE FROM memos WHERE id = $1', [id])
+  CONN.exec('DELETE FROM memos WHERE id = $1',[ params['id']])
   redirect '/memos'
 end
 
 get '/memos/:id/edit' do
-  id = params['id']
-  @memo = CONN.exec('SELECT * FROM memos WHERE id = $1', [id]).first
+  @memo = CONN.exec('SELECT * FROM memos WHERE id = $1',[ params['id']]).first
   return not_found if @memo.nil?
 
   erb :edit_view
 end
 
 patch '/memos/:id' do
-  id = params['id']
   # 一文が長いから2行に分けた
-  res = CONN.exec('UPDATE  memos SET (title, text) = ($1, $2) WHERE id = $3', [params[:title], params[:text], id])
+  res = CONN.exec('UPDATE  memos SET (title, text) = ($1, $2) WHERE id = $3', [params[:title], params[:text], params['id']])
   @memo = res.first
   redirect '/memos'
 end
