@@ -7,18 +7,14 @@ require 'pg'
 
 helpers MemoHelpers
 
-my_db_name = 'memo'
+MY_DB_NAME = 'memo'
 
-conn = PG.connect(dbname: my_db_name)
+CONN = PG.connect(dbname: MY_DB_NAME)
 
-begin
-  conn.exec('CREATE TABLE memos(id SERIAL, title TEXT NOT NULL, text TEXT NOT NULL)')
-rescue PG::DuplicateTable
-  p 'table is already exist'
-end
+CONN.exec('CREATE TABLE IF NOT EXISTS memos(id SERIAL, title TEXT NOT NULL, text TEXT NOT NULL)')
 
 get '/memos' do
-  @memos = conn.exec('SELECT * FROM memos')
+  @memos = CONN.exec('SELECT * FROM memos')
   erb :top_view
 end
 
@@ -27,13 +23,13 @@ get '/memos/new' do
 end
 
 post '/memos' do
-  conn.exec('INSERT INTO memos(title, text) VALUES ($1, $2)', [params[:title], params[:text]])
+  CONN.exec('INSERT INTO memos(title, text) VALUES ($1, $2)', [params[:title], params[:text]])
   redirect '/memos'
 end
 
 get '/memos/:id' do
   id = params['id']
-  @memo = conn.exec('SELECT * FROM memos WHERE id = $1', [id]).first
+  @memo = CONN.exec('SELECT * FROM memos WHERE id = $1', [id]).first
   return not_found if @memo.nil?
 
   erb :show_view
@@ -41,13 +37,13 @@ end
 
 delete '/memos/:id' do
   id = params['id']
-  conn.exec('DELETE FROM memos WHERE id = $1', [id])
+  CONN.exec('DELETE FROM memos WHERE id = $1', [id])
   redirect '/memos'
 end
 
 get '/memos/:id/edit' do
   id = params['id']
-  @memo = conn.exec('SELECT * FROM memos WHERE id = $1', [id]).first
+  @memo = CONN.exec('SELECT * FROM memos WHERE id = $1', [id]).first
   return not_found if @memo.nil?
 
   erb :edit_view
@@ -56,7 +52,7 @@ end
 patch '/memos/:id' do
   id = params['id']
   # 一文が長いから2行に分けた
-  res = conn.exec('UPDATE  memos SET (title, text) = ($1, $2) WHERE id = $3', [params[:title], params[:text], id])
+  res = CONN.exec('UPDATE  memos SET (title, text) = ($1, $2) WHERE id = $3', [params[:title], params[:text], id])
   @memo = res.first
   redirect '/memos'
 end
