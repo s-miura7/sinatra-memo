@@ -47,9 +47,8 @@ get '/memos/:id/edit' do
 end
 
 patch '/memos/:id' do
-  # 一文が長いから2行に分けた
-  res = CONN.exec('UPDATE  memos SET (title, text) = ($1, $2) WHERE id = $3', [params[:title], params[:text], params['id']])
-  @memo = res.first
+  new_memo = [[params[:title], params[:text], params['id']]]
+  CONN.exec('UPDATE  memos SET (title, text) = ($1, $2) WHERE id = $3', *new_memo)
   redirect '/memos'
 end
 
