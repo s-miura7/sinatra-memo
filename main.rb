@@ -28,7 +28,7 @@ post '/memos' do
 end
 
 get '/memos/:id' do
-  redirect not_found unless /^[+-]?[0-9]+$/ =~ params['id'].to_s
+  redirect not_found unless /^[0-9]+$/ =~ params['id'].to_s
   @memo = CONN.exec('SELECT * FROM memos WHERE id = $1', [params['id']]).first
   redirect not_found if @memo.nil?
 
@@ -41,7 +41,7 @@ delete '/memos/:id' do
 end
 
 get '/memos/:id/edit' do
-  redirect not_found unless /^[+-]?[0-9]+$/ =~ params['id'].to_s
+  redirect not_found unless /^[0-9]+$/ =~ params['id'].to_s
   @memo = CONN.exec('SELECT * FROM memos WHERE id = $1', [params['id']]).first
   redirect not_found if @memo.nil?
 
