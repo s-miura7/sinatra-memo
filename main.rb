@@ -11,7 +11,7 @@ MY_DB_NAME = 'memo'
 
 CONN = PG.connect(dbname: MY_DB_NAME)
 
-CONN.exec('CREATE TABLE IF NOT EXISTS memos(id SERIAL, title TEXT NOT NULL, text TEXT NOT NULL)')
+CONN.exec('CREATE TABLE IF NOT EXISTS memos(id SERIAL PRIMARY KEY, title TEXT NOT NULL, text TEXT NOT NULL)')
 
 get '/memos' do
   @memos = CONN.exec('SELECT * FROM memos ORDER BY id ASC')
