@@ -28,7 +28,7 @@ post '/memos' do
 end
 
 get '/memos/:id' do
-  redirect not_found unless /^[0-9]+$/ =~ params['id'].to_s
+  redirect not_found unless params['id'].match?(/^[0-9]+$/)
   @memo = CONN.exec('SELECT * FROM memos WHERE id = $1', [params['id']]).first
   redirect not_found if @memo.nil?
 
@@ -41,7 +41,7 @@ delete '/memos/:id' do
 end
 
 get '/memos/:id/edit' do
-  redirect not_found unless /^[0-9]+$/ =~ params['id'].to_s
+  redirect not_found unless params['id'].match?(/^[0-9]+$/)
   @memo = CONN.exec('SELECT * FROM memos WHERE id = $1', [params['id']]).first
   redirect not_found if @memo.nil?
 
@@ -49,11 +49,10 @@ get '/memos/:id/edit' do
 end
 
 patch '/memos/:id' do
-  new_memo = [[params[:title], params[:text], params['id']]]
-  CONN.exec('UPDATE  memos SET (title, text) = ($1, $2) WHERE id = $3', *new_memo)
+  CONN.exec('UPDATE  memos SET (title, text) = ($1, $2) WHERE id = $3', [[params[:title], params[:text], params['id']]])
   redirect '/memos'
 end
 
 not_found do
-  '404 ページが見つかりません'
+  erb :not_found_view
 end
