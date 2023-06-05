@@ -47,9 +47,15 @@ delete '/memos/:id' do
 end
 
 get '/memos/:id/edit' do
-  redirect not_found unless params['id'].match?(/^[0-9]+$/)
+  unless params['id'].match?(/^[0-9]+$/)
+    not_found
+    return
+  end
   @memo = CONN.exec('SELECT * FROM memos WHERE id = $1', [params['id']]).first
-  redirect not_found if @memo.nil?
+  if @memo.nil?
+    not_found
+    return
+  end
 
   erb :edit_view
 end
