@@ -28,7 +28,7 @@ post '/memos' do
 end
 
 get '/memos/:id' do
-  unless params['id'].match?(/^[0-9]+$/)
+  unless params['id'].match?(/^\d+$/)
     not_found
     return
   end
@@ -47,7 +47,7 @@ delete '/memos/:id' do
 end
 
 get '/memos/:id/edit' do
-  unless params['id'].match?(/^[0-9]+$/)
+  unless params['id'].match?(/^\d+$/)
     not_found
     return
   end
